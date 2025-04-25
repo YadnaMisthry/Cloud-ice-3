@@ -1,0 +1,53 @@
+﻿@using Azure.Core
+@model IEnumerable<Test_DB.Models.User>
+
+@{
+    ViewBag.Title = "User List";
+}
+
+<h2>Users</h2>
+
+@using (Html.BeginForm("Index", "User", FormMethod.Get))
+{
+    <p>
+        Search: @Html.TextBox("searchString", Request.Query["searchString"], new { @class = "form-control", placeholder = "Search username, email, bio" })
+
+        Email Domain:
+        @Html.DropDownList("emailDomain", new SelectList(new[] {
+    new SelectListItem { Text = "All", Value = "" },
+    new SelectListItem { Text = "@gmail.com", Value = "@gmail.com" },
+    new SelectListItem { Text = "@yahoo.com", Value = "@yahoo.com" }
+    }, "Value", "Text", Request.Query["emailDomain"]), new { @class = "form-control" })
+
+        Sort by:
+        @Html.DropDownList("sortOrder", new SelectList(new[] {
+    new SelectListItem { Text = "Username A-Z", Value = "username" },
+    new SelectListItem { Text = "Username Z-A", Value = "username_desc" },
+    new SelectListItem { Text = "Email A-Z", Value = "email" },
+    new SelectListItem { Text = "Email Z-A", Value = "email_desc" }
+    }, "Value", "Text", Request.Query["sortOrder"]), new { @class = "form-control" })
+
+        <input type="submit" value="Apply" class="btn btn-primary" />
+    </p>
+}
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Bio</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.Email</td>
+                <td>@user.Bio</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

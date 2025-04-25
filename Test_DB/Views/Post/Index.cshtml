@@ -1,0 +1,65 @@
+@using Azure.Core
+@model IEnumerable<Test_DB.Models.Post>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Posts</h1>
+
+@using (Html.BeginForm("Index", "Post", FormMethod.Get))
+{
+    <p>
+        Search: @Html.TextBox("searchString", Request.Query["searchString"], new { @class = "form-control", placeholder = "Search content or user" })
+
+        Sort by:
+        @Html.DropDownList("sortOrder", new SelectList(new[] {
+    new SelectListItem { Text = "Newest", Value = "newest" },
+    new SelectListItem { Text = "Oldest", Value = "oldest" }
+    }, "Value", "Text", Request.QueryString["sortOrder"]), new { @class = "form-control" })
+
+        <input type="submit" value="Apply" class="btn btn-primary" />
+    </p>
+}
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Username) <!-- Assuming User has a Username property -->
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
